@@ -40,8 +40,17 @@ export default function App() {
   // --- Initialization ---
 
   const initializePeer = (overrideId?: string) => {
-    const peer = new Peer(overrideId); // Auto-generate ID if null
-    
+    const peer = new Peer(overrideId, {
+        debug: 2,
+        secure: true, // OBLIGATORIO: Para que funcione en Vercel (HTTPS)
+        config: {
+          // Esto ayuda a conectar ordenadores en diferentes casas (WiFis distintas)
+          iceServers: [
+            { urls: 'stun:stun1.l.google.com:19302' },
+            { urls: 'stun:stun2.l.google.com:19302' },
+          ],
+        },
+    });    
     peer.on('open', (id) => {
       setMyId(id);
       setIsConnected(true);
